@@ -23,6 +23,18 @@ navigator.geolocation.getCurrentPosition(
     const { longitude } = position.coords;
     console.log(latitude, longitude);
     console.log(`https://www.google.ca/maps/@${latitude},${longitude}`);
+    const coords = [latitude, longitude];
+    const map = L.map('map').setView(coords, 13); //in setView the first one is latitude, longitude and the last one is zoom level
+    //Maps are made up of tiles:
+    L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    L.marker(coords)
+      .addTo(map)
+      .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+      .openPopup();
   },
   function () {
     alert('Could not get your position');
