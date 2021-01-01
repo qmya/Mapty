@@ -25,16 +25,37 @@ navigator.geolocation.getCurrentPosition(
     console.log(`https://www.google.ca/maps/@${latitude},${longitude}`);
     const coords = [latitude, longitude];
     const map = L.map('map').setView(coords, 13); //in setView the first one is latitude, longitude and the last one is zoom level
+    console.log(map);
     //Maps are made up of tiles:
     L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
 
-    L.marker(coords)
-      .addTo(map)
-      .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
-      .openPopup();
+    // L.marker(coords)
+    //   .addTo(map)
+    //   .bindPopup('A pretty CSS3 popup.<br> Easily customizable.')
+    //   .openPopup();
+    //this is coming from leaflet
+    map.on('click', function (mapEvent) {
+      console.log(mapEvent);
+      const { lat, lng } = mapEvent.latlng;
+      //Adding a popup and marker to the map where we clicked
+      L.marker([lat, lng])
+        .addTo(map)
+        .bindPopup(
+          L.popup({
+            maxWidth: 250,
+            minWidth: 100,
+            maxHeight: 300,
+            autoClose: false,
+            closeOnClick: false,
+            className: 'running-popup',
+          })
+        )
+        .setPopupContent('workout')
+        .openPopup();
+    });
   },
   function () {
     alert('Could not get your position');
