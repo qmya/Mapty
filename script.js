@@ -283,6 +283,11 @@ class App {
       this._renderWorkout(work);
     });
   }
+  reset() {
+    //remove the work outs from the localstorage and then reload the page
+    localStorage.removeItem('workouts');
+    localStorage.reload();
+  }
 }
 //Here we can call the class object
 const app = new App();
