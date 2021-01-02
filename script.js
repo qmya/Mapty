@@ -284,9 +284,9 @@ class App {
     });
   }
   reset() {
-    //remove the work outs from the localstorage and then reload the page
+    //remove the work outs from the localstorage
     localStorage.removeItem('workouts');
-    localStorage.reload();
+    location.reload(); //and then reload the page
   }
 }
 //Here we can call the class object
