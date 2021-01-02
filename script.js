@@ -54,7 +54,7 @@ class Cycling extends Workout {
 
 // const run1 = new Running([43, -79], 5.2, 24, 178);
 // const cycling1 = new Cycling([43, -79], 27, 95, 523);
-// console.log(run1, cycling1);
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //APPLICATION ARCHITECTURE :
 
@@ -101,15 +101,11 @@ class App {
   }
 
   _loadMap(position) {
-    console.log(position);
     const { latitude } = position.coords; // const latitude = position.coords.latitude;
     const { longitude } = position.coords; // const longitude = position.coords.longitude;
-    console.log(latitude, longitude);
-    console.log(`https://www.google.ca/maps/@${latitude},${longitude}`);
+
     const coords = [latitude, longitude];
-    console.log(this);
     this.#map = L.map('map').setView(coords, this.#mapZoomLevel); //in setView the first one is latitude, longitude and the last one is zoom level
-    console.log(this.#map);
     //Maps are made up of tiles:
     L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
       attribution:
@@ -125,7 +121,6 @@ class App {
   }
 
   _showForm(mapE) {
-    console.log(mapE);
     this.#mapEvent = mapE;
     //1)  when you click on the map the form appears
     form.classList.remove('hidden');
@@ -180,13 +175,11 @@ class App {
     }
     //Add new object to workout array
     this.#workouts.push(workout);
-    console.log(workout);
     //Render workout on the map as a marker
 
     this._renderWorkoutMarker(workout);
     //Render workout on list
     this._renderWorkout(workout);
-    console.log(this);
     //Here the SUBMIT is actually an enter button
     //clear + Hide the form field
     this._hideForm();
@@ -262,13 +255,11 @@ class App {
   }
   _moveToPopup(e) {
     const workoutEl = e.target.closest('.workout');
-    console.log(workoutEl);
     if (!workoutEl) return;
 
     const workout = this.#workouts.find(
       work => work.id === workoutEl.dataset.id
     );
-    console.log(workout);
     //From leaflet documatation
     this.#map.setView(workout.coords, this.#mapZoomLevel, {
       animate: true,
@@ -276,7 +267,7 @@ class App {
         duration: 1,
       },
     });
-    workout.click();
+    // workout.click();
   }
   //local is a browser api
   _setLocalStorage() {
@@ -284,7 +275,6 @@ class App {
   }
   _getLocalStorage() {
     const data = JSON.parse(localStorage.getItem('workouts'));
-    console.log(data);
     if (!data) return;
 
     this.#workouts = data;
@@ -296,5 +286,3 @@ class App {
 }
 //Here we can call the class object
 const app = new App();
-
-console.log(app);
