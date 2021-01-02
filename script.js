@@ -75,6 +75,11 @@ class App {
   constructor() {
     //We want to call the geolocation when the application starts
     this._getPosition();
+    //Get data from local storage
+    this._getLocalStorage();
+
+    ////////////////////////
+    //Attach event handler
     //Now when you press enter key the form get submitted
     form.addEventListener('submit', this._newWorkOut.bind(this));
     //Adding an event listening to the options:
@@ -113,6 +118,10 @@ class App {
     //this is coming from leaflet
     //Handling clicks on Map:
     this.#map.on('click', this._showForm.bind(this));
+
+    this.#workouts.forEach(work => {
+      this._renderWorkoutMarker(work);
+    });
   }
 
   _showForm(mapE) {
@@ -181,8 +190,8 @@ class App {
     //Here the SUBMIT is actually an enter button
     //clear + Hide the form field
     this._hideForm();
-
-    console.log('Enter button is clicked on the form');
+    //Set local storage to all workouts
+    this._setLocalStorage();
   }
   _renderWorkoutMarker(workout) {
     //Adding a popup and marker to the map where we clicked
@@ -268,6 +277,21 @@ class App {
       },
     });
     workout.click();
+  }
+  //local is a browser api
+  _setLocalStorage() {
+    localStorage.setItem('workouts', JSON.stringify(this.#workouts));
+  }
+  _getLocalStorage() {
+    const data = JSON.parse(localStorage.getItem('workouts'));
+    console.log(data);
+    if (!data) return;
+
+    this.#workouts = data;
+
+    this.#workouts.forEach(work => {
+      this._renderWorkout(work);
+    });
   }
 }
 //Here we can call the class object
