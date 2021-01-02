@@ -66,7 +66,8 @@ class App {
   //To make it encapsulated and make it part of the class object:
   #map;
   #mapEvent;
-  #Workouts = []; //activity array
+  #mapZoomLevel = 13;
+  #workouts = []; //activity array
   constructor() {
     //We want to call the geolocation when the application starts
     this._getPosition();
@@ -74,6 +75,8 @@ class App {
     form.addEventListener('submit', this._newWorkOut.bind(this));
     //Adding an event listening to the options:
     inputType.addEventListener('change', this._toggleElevationField);
+    //Adding eventlistner to the parent element so when you click on workout it will take you to the respectiveworkout on map
+    containerWorkouts.addEventListener('click', this._moveToPopup.bind(this));
   }
 
   _getPosition() {
@@ -96,7 +99,7 @@ class App {
     console.log(`https://www.google.ca/maps/@${latitude},${longitude}`);
     const coords = [latitude, longitude];
     console.log(this);
-    this.#map = L.map('map').setView(coords, 13); //in setView the first one is latitude, longitude and the last one is zoom level
+    this.#map = L.map('map').setView(coords, this.#mapZoomLevel); //in setView the first one is latitude, longitude and the last one is zoom level
     console.log(this.#map);
     //Maps are made up of tiles:
     L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
@@ -163,7 +166,7 @@ class App {
       workout = new Cycling([lat, lng], distance, duration, elevation);
     }
     //Add new object to workout array
-    this.#Workouts.push(workout);
+    this.#workouts.push(workout);
     console.log(workout);
     //Render workout on the map as a marker
 
@@ -243,6 +246,23 @@ class App {
     </li>
     `;
     form.insertAdjacentHTML('afterend', html);
+  }
+  _moveToPopup(e) {
+    const workoutEl = e.target.closest('.workout');
+    console.log(workoutEl);
+    if (!workoutEl) return;
+
+    const workout = this.#workouts.find(
+      work => work.id === workoutEl.dataset.id
+    );
+    console.log(workout);
+    //From leaflet documatation
+    this.#map.setView(workout.coords, this.#mapZoomLevel, {
+      animate: true,
+      pan: {
+        duration: 1,
+      },
+    });
   }
 }
 //Here we can call the class object
