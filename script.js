@@ -3,6 +3,7 @@
 class Workout {
   date = new Date();
   id = (Date.now() + '').slice(-10); //We shouldnt create any id by our own we should use a library to take care of it
+  clicks = 0;
   constructor(coords, distance, duration) {
     this.coords = coords; //[lat, lng]
     this.distance = distance; //in km
@@ -14,6 +15,9 @@ class Workout {
     this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${
       months[this.date.getMonth()]
     } ${this.date.getDate()}`;
+  }
+  click() {
+    this.clicks++;
   }
 }
 
@@ -263,6 +267,7 @@ class App {
         duration: 1,
       },
     });
+    workout.click();
   }
 }
 //Here we can call the class object
